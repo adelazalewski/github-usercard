@@ -1,9 +1,31 @@
+//import {axios} from 'axios';
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
-
+// let array = [
+//   {
+//     name: "menubar",
+//     you: "melanie",
+//     dami: 2,
+//   }
+// ]
+// console.log(array[0].name);
+let resArray = [];
+axios
+ .get(`https://api.github.com/users/adelazalewski`)
+ .then((res) => {
+   console.log('you did it: ', res.data);
+   resArray.push(res.data);
+   console.log(resArray);
+   cards.appendChild(gitProfileCardsMaker(resArray));
+   //const cards = document.querySelector('.cards');
+ })
+ .catch((err) => {
+   console.log('this didnt work:', err);
+ });
+ 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -28,8 +50,22 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
-
+let followersArray = [];
+axios
+  .get(`https://api.github.com/users/adelazalewski/followers`)
+  .then((res) => {
+    console.log('you got the right followers data: ', res);
+    //followersArray.push(res.)
+    console.log(res.data);
+    followersArray = res.data;
+    res.data.forEach((element) => {
+      cards.appendChild(gitProfileCardsMaker(element));
+    });
+    //cards.appendChild(gitProfileCardsMaker(res.data));
+  })
+  .catch((err) => {
+    console.log('this is not working: ', err);
+  })
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
     Using DOM methods and properties, create and return the following markup:
@@ -49,6 +85,49 @@ const followersArray = [];
       </div>
     </div>
 */
+function gitProfileCardsMaker(array) {
+  const divCard = document.createElement('div');
+  const img = document.createElement('img');
+  const divCardInfo =  document.createElement('div');
+  const name = document.createElement('h3');
+  const userName = document.createElement('p');
+  const location =  document.createElement('p');
+  const profile =  document.createElement('p');
+  const anchorLink =  document.createElement('a');
+  const followers =  document.createElement('p');
+  const following =  document.createElement('p');
+  const bio =  document.createElement('p');
+
+  divCard.classList.add('card');
+  //console.log(array);
+  img.src = array[0].avatar_url;
+  divCardInfo.classList.add('card-info');
+  name.classList.add('name');
+  name.textContent = array[0].name;
+  userName.classList.add('username');
+  location.textContent = array[0].location;
+  profile.textContent = 'Profile: ';
+  anchorLink.href = array[0].html_url;
+  anchorLink.textContent = array[0].name;
+  followers.textContent = `Followers: ${array[0].followers}`;
+  following.textContent = `Following: ${array[0].following}`;
+  bio.textContent = array[0].bio;
+
+  divCard.appendChild(img);
+  divCard.appendChild(divCardInfo);
+  divCardInfo.appendChild(name);
+  divCardInfo.appendChild(userName);
+  divCardInfo.appendChild(location);
+  divCardInfo.appendChild(profile);
+  profile.appendChild(anchorLink);
+  divCardInfo.appendChild(followers);
+  divCardInfo.appendChild(following);
+  divCardInfo.appendChild(bio);
+
+  return divCard;
+};
+const cards = document.querySelector('.cards');
+//cards.appendChild(gitProfileCardsMaker(resArray));
 
 /*
   List of LS Instructors Github username's:
@@ -58,3 +137,4 @@ const followersArray = [];
     luishrd
     bigknell
 */
+ 
