@@ -49,23 +49,21 @@ axios
     Using that array, iterate over it, requesting data for each user, creating a new card for each
     user, and adding that card to the DOM.
 */
+let eachUsersArray = [];
+console.log(eachUsersArray);
 
-let followersArray = [];
-axios
-  .get(`https://api.github.com/users/adelazalewski/followers`)
-  .then((res) => {
-    console.log('you got the right followers data: ', res);
-    //followersArray.push(res.)
-    console.log(res.data);
-    followersArray = res.data;
-    res.data.forEach((element) => {
-      cards.appendChild(gitProfileCardsMaker(element));
-    });
-    //cards.appendChild(gitProfileCardsMaker(res.data));
-  })
-  .catch((err) => {
-    console.log('this is not working: ', err);
-  })
+let followersArray = ["https://api.github.com/users/melaniechele", "https://api.github.com/users/mrjoshuamartinez", "https://api.github.com/users/markrogo", "https://api.github.com/users/sathyaganesan", "https://api.github.com/users/gitnubl33t"];
+followersArray.forEach((url) => {axios.get(url).then((res) => {
+  console.log('users res: ', res.data); 
+  eachUsersArray.push(res.data);
+  let manipulateArray = eachUsersArray.splice(0, 1);
+  console.log(manipulateArray);
+  // console.log(eachUsersArray); - this is now emplty after the splice...
+  cards.appendChild(gitProfileCardsMaker(manipulateArray));
+ }).catch((err) => {
+    console.log('this is error: ', err);});
+});
+
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
     Using DOM methods and properties, create and return the following markup:
